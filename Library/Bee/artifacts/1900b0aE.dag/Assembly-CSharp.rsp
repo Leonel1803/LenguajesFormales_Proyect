@@ -352,7 +352,9 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 -analyzer:"J:/Program Files/Unity/Hub/Editor/2022.3.50f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll"
 -analyzer:"J:/Program Files/Unity/Hub/Editor/2022.3.50f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
+"Assets/Content/Scripts/BulletController.cs"
 "Assets/Content/Scripts/PlayerController.cs"
+"Assets/Content/Scripts/WeaponController.cs"
 -langversion:9.0
 /deterministic
 /optimize+

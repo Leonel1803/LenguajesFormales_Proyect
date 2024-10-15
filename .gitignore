@@ -1,0 +1,49 @@
+# This .gitignore file should be placed at the root of your Unity project directory
+
+# Ignore auto-generated Unity files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+UserSettings/
+
+# Ignore asset meta data and caches
+Assets/**/*.meta
+Assets/**/*.DS_Store
+
+# Ignore auto-generated VS/JetBrains Rider files
+.vscode/
+.idea/
+*.csproj
+*.sln
+*.userprefs
+
+# Ignore build artifacts
+*.apk
+*.aab
+*.exe
+*.app
+*.unitypackage
+
+# Ignore crash reports and log files
+crashlytics-build-info.json
+*.log
+*.stacktrace
+
+# Ignore generated lightmap data
+LightmapSnapshot.asset
+
+# Ignore the Unity Package Manager folder
+Packages/packages-lock.json
+
+# Ignore JetBrains Rider project files
+.idea/
+
+# Ignore Mac system files
+.DS_Store
+
+# Ignore Windows system files
+Thumbs.db
