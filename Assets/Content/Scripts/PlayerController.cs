@@ -10,7 +10,14 @@ public class PlayerController : MonoBehaviour
     Rigidbody playerRb;
     Animator playerAnim;
 
+    public GameObject pistol;
+    public GameObject rifle;
+
     public float playerSpeed = 0f;
+
+    private bool hasPistol = false;
+    private bool isPvP = false;
+    private bool hasRifle = false;
 
     private Vector2 newDirection;
 
@@ -23,7 +30,7 @@ public class PlayerController : MonoBehaviour
     private float rotX = 0f;
 
     public float camRotSpeed = 200f;
-    public float minAngle = -45f;
+    public float minAngle = -25f;
     public float maxAngle = 45f;
     public float cameraSpeed = 200f;
 
@@ -35,6 +42,10 @@ public class PlayerController : MonoBehaviour
         playerAnim = GetComponentInChildren<Animator>();
 
         camera = Camera.main.transform;
+
+        hasPistol = true;
+
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
@@ -85,7 +96,60 @@ public class PlayerController : MonoBehaviour
 
     public void AnimLogic()
     {
+        WeaponSelector();
+
         playerAnim.SetFloat("X", newDirection.x);
         playerAnim.SetFloat("Y", newDirection.y);
+        playerAnim.SetBool("holdPistol", hasPistol);
+
+        playerAnim.SetLayerWeight(1, hasPistol ? 1 : 0);
+
+        if (isPvP)
+        {
+            if (Input.GetKeyDown(KeyCode.F)){
+                playerAnim.Play("Kick");
+            }
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                switch(Random.Range(1, 4))
+                {
+                    case 1:
+                        playerAnim.Play("Left Punch");
+                        break;
+                    case 2:
+                        playerAnim.Play("Right Punch");
+                        break;
+                    case 3:
+                        playerAnim.Play("Elbow Punch");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    public void WeaponSelector()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            isPvP = true;
+            hasPistol = false;
+            hasRifle = false;
+            pistol.SetActive(hasPistol);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            isPvP = false;
+            hasPistol = true;
+            hasRifle = false;
+            pistol.SetActive(hasPistol);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            isPvP = false;
+            hasPistol = false;
+            hasRifle = true;
+        }
     }
 }
