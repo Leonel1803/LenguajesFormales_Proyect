@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class FloatingHealthBar : MonoBehaviour
 {
@@ -10,8 +10,9 @@ public class FloatingHealthBar : MonoBehaviour
 
     private void Awake()
     {
-        slider = transform.parent.parent.GetComponentInChildren<Slider>();
-       // slider = this.transform.parent.GetComponent<Slider>();
+        UnityEngine.Debug.Log(gameObject);
+        slider = gameObject.GetComponent<Slider>();
+    //   // slider = this.transform.parent.GetComponent<Slider>();
         UnityEngine.Debug.Log(slider);
     }
     public void UpdateHealthBar(float currentValue, float maxValue)

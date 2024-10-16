@@ -116,13 +116,15 @@ public class PlayerController : MonoBehaviour
         if (isPvP)
         {
             //var atm = enemy.getComponent<AttributeManager>();
-            enemy.TakeDamage(5);
+            //
             if (Input.GetKeyDown(KeyCode.F)){
                 playerAnim.Play("Kick");
+                enemy.TakeDamage(1);
             }
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                switch(Random.Range(1, 4))
+                enemy.TakeDamage(1);
+                switch (Random.Range(1, 4))
                 {
                     case 1:
                         playerAnim.Play("Left Punch");

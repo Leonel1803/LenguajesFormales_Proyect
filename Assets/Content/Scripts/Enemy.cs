@@ -15,7 +15,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] FloatingHealthBar healthBar;
     Rigidbody rb;
     Transform target;
-   
+    public Animator enemyAnim;
+
     private void Awake()
     {
         rb = this.GetComponent<Rigidbody>();
@@ -34,6 +35,7 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        enemyAnim.Play("Death");
         Destroy(gameObject);
     }
 

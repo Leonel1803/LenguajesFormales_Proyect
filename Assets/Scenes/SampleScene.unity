@@ -1434,6 +1434,7 @@ MonoBehaviour:
   maxHealth: 3
   moveSpeed: 3
   healthBar: {fileID: 0}
+  enemyAnim: {fileID: 0}
 --- !u!4 &1012653764
 Transform:
   m_ObjectHideFlags: 0
@@ -2027,7 +2028,7 @@ GameObject:
   - component: {fileID: 1469282023}
   - component: {fileID: 1469282022}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: SliderBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2066,6 +2067,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2a3a32a0d87d7c47bc3794dc2dcc7b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slider: {fileID: 0}
 --- !u!114 &1469282023
 MonoBehaviour:
   m_ObjectHideFlags: 0
