@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
 
         camera = Camera.main.transform;
 
-        hasPistol = true;
+        isPvP = true;
 
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -101,8 +101,11 @@ public class PlayerController : MonoBehaviour
         playerAnim.SetFloat("X", newDirection.x);
         playerAnim.SetFloat("Y", newDirection.y);
         playerAnim.SetBool("holdPistol", hasPistol);
+        playerAnim.SetBool("holdRifle", hasRifle);
 
+        playerAnim.SetLayerWeight(0, isPvP ? 1 : 0);
         playerAnim.SetLayerWeight(1, hasPistol ? 1 : 0);
+        playerAnim.SetLayerWeight(2, hasRifle ? 1 : 0);
 
         if (isPvP)
         {
@@ -136,13 +139,19 @@ public class PlayerController : MonoBehaviour
             isPvP = true;
             hasPistol = false;
             hasRifle = false;
+
+            playerAnim.Play("Change Weapon");
             pistol.SetActive(hasPistol);
+            rifle.SetActive(hasRifle);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             isPvP = false;
             hasPistol = true;
             hasRifle = false;
+
+            playerAnim.Play("Change Weapon");
+            rifle.SetActive(hasRifle);
             pistol.SetActive(hasPistol);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -150,6 +159,10 @@ public class PlayerController : MonoBehaviour
             isPvP = false;
             hasPistol = false;
             hasRifle = true;
+
+            playerAnim.Play("Change Weapon");
+            pistol.SetActive(hasPistol);
+            rifle.SetActive(hasRifle);
         }
     }
 }
