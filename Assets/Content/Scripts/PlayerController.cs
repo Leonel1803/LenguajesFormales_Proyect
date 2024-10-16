@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
+using static UnityEngine.GraphicsBuffer;
 
 public class PlayerController : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class PlayerController : MonoBehaviour
     //Camera
     public Transform cameraAxis;
     public Transform cameraTrack;
-    private Transform camera;
+    private Transform cameraC;
 
     private float rotY = 0f;
     private float rotX = 0f;
@@ -34,6 +35,9 @@ public class PlayerController : MonoBehaviour
     public float maxAngle = 45f;
     public float cameraSpeed = 200f;
 
+    //Enemy
+    Enemy enemy;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,11 +45,13 @@ public class PlayerController : MonoBehaviour
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponentInChildren<Animator>();
 
-        camera = Camera.main.transform;
+        cameraC = Camera.main.transform;
 
         isPvP = true;
 
         Cursor.lockState = CursorLockMode.Locked;
+
+        enemy = GameObject.Find("/WashedFish").GetComponent<Enemy>();
     }
 
     // Update is called once per frame
@@ -72,8 +78,8 @@ public class PlayerController : MonoBehaviour
         Quaternion localRotation = Quaternion.Euler(-rotY, 0, 0);
         cameraAxis.localRotation = localRotation;
 
-        camera.position = Vector3.Lerp(camera.position, cameraTrack.position, cameraSpeed * time);
-        camera.rotation = Quaternion.Lerp(camera.rotation, cameraTrack.rotation, cameraSpeed * time);
+        cameraC.position = Vector3.Lerp(cameraC.position, cameraTrack.position, cameraSpeed * time);
+        cameraC.rotation = Quaternion.Lerp(cameraC.rotation, cameraTrack.rotation, cameraSpeed * time);
     }
 
     public void MoveLogic()
@@ -109,6 +115,8 @@ public class PlayerController : MonoBehaviour
 
         if (isPvP)
         {
+            //var atm = enemy.getComponent<AttributeManager>();
+            enemy.TakeDamage(5);
             if (Input.GetKeyDown(KeyCode.F)){
                 playerAnim.Play("Kick");
             }
