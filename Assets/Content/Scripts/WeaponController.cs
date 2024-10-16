@@ -8,6 +8,8 @@ public class WeaponController : MonoBehaviour
 
     public bool shooting = false;
 
+    public int weaponType;
+
     public GameObject bulletPrefab;
 
     // Start is called before the first frame update
@@ -38,7 +40,17 @@ public class WeaponController : MonoBehaviour
 
     public void Shoot()
     {
-        Vector3 realShootPosition = new Vector3(shootSpawn.position.x, -0.10f, shootSpawn.position.z);
+        Vector3 realShootPosition = new Vector3();
+
+        if (weaponType == 1)
+        {
+            realShootPosition = new Vector3(shootSpawn.position.x, -0.10f, shootSpawn.position.z);
+        }
+        if (weaponType == 2)
+        {
+            realShootPosition = new Vector3(shootSpawn.position.x, shootSpawn.position.y - .9f, shootSpawn.position.z);
+        }
+
         Instantiate(bulletPrefab, realShootPosition, shootSpawn.rotation);
     }
 }
