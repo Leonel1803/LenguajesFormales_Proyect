@@ -10,10 +10,7 @@ public class FloatingHealthBar : MonoBehaviour
 
     private void Awake()
     {
-        UnityEngine.Debug.Log(gameObject);
         slider = gameObject.GetComponent<Slider>();
-    //   // slider = this.transform.parent.GetComponent<Slider>();
-        UnityEngine.Debug.Log(slider);
     }
     public void UpdateHealthBar(float currentValue, float maxValue)
     {

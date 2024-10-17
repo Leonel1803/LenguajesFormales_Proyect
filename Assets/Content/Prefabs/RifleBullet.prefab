@@ -126,9 +126,10 @@ GameObject:
   - component: {fileID: 8785323594534057472}
   - component: {fileID: 2264705994786392366}
   - component: {fileID: 6329074485029281850}
+  - component: {fileID: 3932948020578784462}
   m_Layer: 0
   m_Name: RifleBullet
-  m_TagString: Untagged
+  m_TagString: RifleDamage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -142,7 +143,7 @@ Transform:
   m_GameObject: {fileID: 8375094231919239480}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -10.225858, y: 0.0149998665, z: -11.4758}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -190,3 +191,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPower: 300
   lifeTime: 4
+--- !u!65 &3932948020578784462
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8375094231919239480}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.20514393, y: 0.092740566, z: 0.10350132}
+  m_Center: {x: 0.012103558, y: 0.4692698, z: -1.6973782}

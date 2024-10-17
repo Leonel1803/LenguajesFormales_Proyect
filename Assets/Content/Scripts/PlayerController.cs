@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Scripting.APIUpdating;
 using static UnityEngine.GraphicsBuffer;
 
@@ -15,10 +16,16 @@ public class PlayerController : MonoBehaviour
     public GameObject rifle;
 
     public float playerSpeed = 0f;
+    private float health = 100f;
 
     private bool hasPistol = false;
     private bool isPvP = false;
     private bool hasRifle = false;
+
+    public Collider foot;
+    public Collider rightElbow;
+    public Collider leftHand;
+    public Collider rightHand;
 
     private Vector2 newDirection;
 
@@ -35,9 +42,6 @@ public class PlayerController : MonoBehaviour
     public float maxAngle = 45f;
     public float cameraSpeed = 200f;
 
-    //Enemy
-    Enemy enemy;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -50,16 +54,39 @@ public class PlayerController : MonoBehaviour
         isPvP = true;
 
         Cursor.lockState = CursorLockMode.Locked;
-
-        enemy = GameObject.Find("/WashedFish").GetComponent<Enemy>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        MoveLogic();
+        Debug.Log(foot.isTrigger + ", " + leftHand.isTrigger + ", " + rightHand.isTrigger + ", " + foot.isTrigger);
+        //Debug.Log(health);
         CameraLogic();
-        AnimLogic();
+
+        if (health > 0)
+        {
+            MoveLogic();
+            AnimLogic();
+        }
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Entra al trigger");
+        if (other.gameObject.tag == "TeletubbieHand")
+        {
+            Debug.Log("Entra al if");
+            TakeDamage(50);
+        }
+    }
+
+    public void TakeDamage(float damage = 10)
+    {
+        health -= damage;
+        if(health <= 0 )
+        {
+            playerAnim.SetBool("isDead", true);
+        }
     }
 
     public void CameraLogic()
@@ -71,14 +98,24 @@ public class PlayerController : MonoBehaviour
         rotY += mouseY * time * camRotSpeed;
         rotX = mouseX * time * camRotSpeed;
 
-        playerTr.Rotate(0, rotX, 0);
+        if(health > 0)
+            playerTr.Rotate(0, rotX, 0);
 
         rotY = Mathf.Clamp(rotY, minAngle, maxAngle);
 
         Quaternion localRotation = Quaternion.Euler(-rotY, 0, 0);
         cameraAxis.localRotation = localRotation;
 
-        cameraC.position = Vector3.Lerp(cameraC.position, cameraTrack.position, cameraSpeed * time);
+        if(health > 0)
+        {
+            cameraC.position = Vector3.Lerp(cameraC.position, cameraTrack.position, cameraSpeed * time);
+        }
+        else
+        {
+            Vector3 distantPosition = cameraTrack.position + new Vector3(0, 0, -2);
+            cameraC.position = Vector3.Lerp(cameraC.position, distantPosition, cameraSpeed * time);
+        }
+        
         cameraC.rotation = Quaternion.Lerp(cameraC.rotation, cameraTrack.rotation, cameraSpeed * time);
     }
 
@@ -115,25 +152,29 @@ public class PlayerController : MonoBehaviour
 
         if (isPvP)
         {
-            //var atm = enemy.getComponent<AttributeManager>();
-            //
             if (Input.GetKeyDown(KeyCode.F)){
+                foot.isTrigger = true;
                 playerAnim.Play("Kick");
-                enemy.TakeDamage(1);
+                StartCoroutine(DisableColliderAfterAnimation());
             }
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                enemy.TakeDamage(1);
                 switch (Random.Range(1, 4))
                 {
                     case 1:
+                        leftHand.isTrigger = true;
                         playerAnim.Play("Left Punch");
+                        StartCoroutine(DisableColliderAfterAnimation());
                         break;
                     case 2:
+                        rightHand.isTrigger = true;
                         playerAnim.Play("Right Punch");
+                        StartCoroutine(DisableColliderAfterAnimation());
                         break;
                     case 3:
+                        rightElbow.isTrigger = true;
                         playerAnim.Play("Elbow Punch");
+                        StartCoroutine(DisableColliderAfterAnimation());
                         break;
                     default:
                         break;
@@ -174,5 +215,15 @@ public class PlayerController : MonoBehaviour
             pistol.SetActive(hasPistol);
             rifle.SetActive(hasRifle);
         }
+    }
+
+    IEnumerator DisableColliderAfterAnimation()
+    {
+        yield return new WaitForSeconds(playerAnim.GetCurrentAnimatorStateInfo(0).length - 2.5f);
+
+        foot.isTrigger = false;
+        rightHand.isTrigger = false;
+        leftHand.isTrigger = false;
+        rightElbow.isTrigger = false;
     }
 }
