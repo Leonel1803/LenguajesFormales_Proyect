@@ -2631,6 +2631,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5185309015824545446, guid: 03a1e57686a3d8845ad059eb9e6c3063, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7281326582220100774, guid: 03a1e57686a3d8845ad059eb9e6c3063, type: 3}
+      propertyPath: m_TagString
+      value: TeletubbieHand
+      objectReference: {fileID: 0}
     - target: {fileID: 7412926391244563690, guid: 03a1e57686a3d8845ad059eb9e6c3063, type: 3}
       propertyPath: playerObject
       value: 

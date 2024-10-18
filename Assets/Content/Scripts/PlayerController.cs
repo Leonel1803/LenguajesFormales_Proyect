@@ -82,13 +82,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnTriggerEnter(Collider other)
+    //public void OnTriggerEnter(Collider other)
+
+
+    private void OnCollisionEnter(UnityEngine.Collision collision)
     {
-        //Debug.Log("Entra al trigger");
+        Collider other = collision.collider;
+        Debug.Log(other.gameObject.tag);
         if (other.gameObject.tag == "TeletubbieHand")
         {
             //Debug.Log("Entra al if");
-            TakeDamage(20);
+            TakeDamage(5);
         }
     }
 
