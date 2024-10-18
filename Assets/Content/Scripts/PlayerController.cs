@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Scripting.APIUpdating;
+using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
 public class PlayerController : MonoBehaviour
@@ -15,8 +16,11 @@ public class PlayerController : MonoBehaviour
     public GameObject pistol;
     public GameObject rifle;
 
+    public GameObject enemyGO;
+
     public float playerSpeed = 0f;
     public float health = 100f;
+    private float maxHealth;
 
     private bool hasPistol = false;
     private bool isPvP = false;
@@ -42,16 +46,24 @@ public class PlayerController : MonoBehaviour
     public float maxAngle = 45f;
     public float cameraSpeed = 200f;
 
+    //Enemy
+    private Enemy enemy;
+
+    //HpBar
+    private Slider slider;
+
     // Start is called before the first frame update
     void Start()
     {
         playerTr = this.transform;
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponentInChildren<Animator>();
-
+        enemy = enemyGO.GetComponent<Enemy>();
         cameraC = Camera.main.transform;
+        slider = GetComponentInChildren<Slider>();
 
         isPvP = true;
+        maxHealth = health;
 
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -59,7 +71,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(foot.isTrigger + ", " + leftHand.isTrigger + ", " + rightHand.isTrigger + ", " + foot.isTrigger);
+        //Debug.Log(foot.isTrigger + ", " + leftHand.isTrigger + ", " + rightHand.isTrigger + ", " + foot.isTrigger);
         //Debug.Log(health);
         CameraLogic();
 
@@ -72,10 +84,10 @@ public class PlayerController : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Entra al trigger");
+        //Debug.Log("Entra al trigger");
         if (other.gameObject.tag == "TeletubbieHand")
         {
-            Debug.Log("Entra al if");
+            //Debug.Log("Entra al if");
             TakeDamage(20);
         }
     }
@@ -83,6 +95,7 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(float damage = 10)
     {
         health -= damage;
+        slider.value = health / maxHealth;
         if(health <= 0 )
         {
             playerAnim.SetBool("isDead", true);

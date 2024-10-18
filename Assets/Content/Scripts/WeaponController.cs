@@ -48,7 +48,7 @@ public class WeaponController : MonoBehaviour
         }
         if (weaponType == 2)
         {
-            realShootPosition = new Vector3(shootSpawn.position.x, shootSpawn.position.y - .9f, shootSpawn.position.z);
+            realShootPosition = new Vector3(shootSpawn.position.x, shootSpawn.position.y , shootSpawn.position.z);
         }
 
         Instantiate(bulletPrefab, realShootPosition, shootSpawn.rotation);

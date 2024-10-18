@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Unity.VisualScripting;
 using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.AI;
@@ -13,7 +14,8 @@ public class Enemy : MonoBehaviour
 {
     private float health, maxHealth = 100f;
 
-    private float moveSpeed = 2f;
+    private float moveSpeed = 1f;
+    private float chaseSpeed = 4f;
     [SerializeField] FloatingHealthBar healthBar;
     Rigidbody enemyRb;
     GameObject player;
@@ -24,17 +26,33 @@ public class Enemy : MonoBehaviour
     public GameObject playerObject;
     PlayerController playerController;
 
+    public float wanderRange = 5f;
+    public float detectionRadius = 10f;
+    private Vector3 wanderPointA;
+    private Vector3 wanderPointB;
+    private Vector3 targetWanderPoint;
+    private bool isChasing = false;
+    private bool movingRight = true;
+
     void Start()
     {
         health = maxHealth;
         player = GameObject.Find("Player");
+        playerController = player.GetComponent<PlayerController>();
+        UnityEngine.Debug.Log(playerController);
         target = GameObject.Find("Player").transform;
         navMeshAgent = GetComponent<NavMeshAgent>();
-        playerController = playerObject.GetComponent<PlayerController>();
+        navMeshAgent.enabled = true;
+        wanderPointA = transform.position - Vector3.right * wanderRange;
+        wanderPointB = transform.position + Vector3.right * wanderRange;
+        targetWanderPoint = wanderPointB;
+        navMeshAgent.SetDestination(targetWanderPoint);
     }
 
     void Update()
     {
+
+        
         if (playerController.health <= 0)
         {
             navMeshAgent.enabled = false;
@@ -42,20 +60,92 @@ public class Enemy : MonoBehaviour
         }
         else if (navMeshAgent.enabled)
         {
-            navMeshAgent.speed = moveSpeed;
-            navMeshAgent.SetDestination(target.position);
+            //navMeshAgent.speed = moveSpeed;
+            //navMeshAgent.SetDestination(target.position);
 
-            if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+            //if (navMeshAgent.remainingDistance <= detectionRadius)
+
+            float playerDistance = Vector3.Distance(transform.position, player.transform.position);
+            //UnityEngine.Debug.Log(playerDistance);
+
+            if (playerDistance <= detectionRadius)
             {
-                teletubbieHand.isTrigger = true;
-                enemyAnim.Play("Hit");
-                StartCoroutine(DisableColliderAfterAnimation());
+                isChasing = true;
+                ChasePlayer();
             }
             else
             {
-                RunningAnimLogic();
+                isChasing = false;
+                Wander();
+            }
+
+
+            UpdateMovementAnimation();
+        }
+    }
+
+    void ChasePlayer()
+    {
+        navMeshAgent.speed = chaseSpeed;
+        navMeshAgent.SetDestination(target.position);
+
+        if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+        {
+            teletubbieHand.isTrigger = true;
+            enemyAnim.Play("Hit");
+            StartCoroutine(DisableColliderAfterAnimation());
+        }
+        else
+        {
+            enemyAnim.SetBool("isWalking", false);
+            enemyAnim.SetBool("isRunning", true);
+        }
+    }
+
+    void UpdateMovementAnimation()
+    {
+        Vector3 velocity = navMeshAgent.velocity;
+
+        if (velocity.magnitude > 0.1f)
+        {
+            if (isChasing)
+            {
+                enemyAnim.SetBool("isRunning", true);
+                enemyAnim.SetBool("isWalking", false);
+            }
+            else
+            {
+                enemyAnim.SetBool("isWalking", true);
+                enemyAnim.SetBool("isRunning", false);
             }
         }
+        else
+        {
+            enemyAnim.SetBool("isWalking", false);
+            enemyAnim.SetBool("isRunning", false);
+        }
+    }
+
+    void Wander()
+    {
+        navMeshAgent.speed = moveSpeed;
+        navMeshAgent.SetDestination(targetWanderPoint);
+
+        if (Vector3.Distance(transform.position, targetWanderPoint) < 1f)
+        {
+            if (movingRight)
+            {
+                targetWanderPoint = wanderPointA;
+            }
+            else
+            {
+                targetWanderPoint = wanderPointB;
+            }
+            movingRight = !movingRight;
+        }
+
+        enemyAnim.SetBool("isWalking", true);
+        enemyAnim.SetBool("isRunning", false);
     }
 
     private void Dance()
@@ -67,6 +157,7 @@ public class Enemy : MonoBehaviour
     {
         enemyRb = this.GetComponent<Rigidbody>();
         enemyRb.isKinematic = true;
+
         enemyAnim = GetComponentInChildren<Animator>();
         healthBar = GetComponentInChildren<FloatingHealthBar>();
     }
@@ -84,7 +175,7 @@ public class Enemy : MonoBehaviour
             health -= 10f;
             TakeDamage();
         }
-        else if(other.gameObject.tag == "RightElbow")
+        else if (other.gameObject.tag == "RightElbow")
         {
             health -= 15f;
             TakeDamage();
@@ -96,11 +187,16 @@ public class Enemy : MonoBehaviour
         }
         else if (other.gameObject.tag == "PistolDamage")
         {
+            Destroy(other.gameObject);
+            navMeshAgent.enabled = false;
             health -= 35f;
             TakeDamage();
         }
         else if (other.gameObject.tag == "RifleDamage")
         {
+
+            Destroy(other.gameObject);
+            navMeshAgent.enabled = false;
             health -= 50f;
             TakeDamage();
         }
@@ -114,9 +210,9 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage()
     {
+        navMeshAgent.enabled = false;
         healthBar.UpdateHealthBar(health, maxHealth);
         enemyAnim.Play("Hitted");
-        navMeshAgent.enabled = false;
 
         StartCoroutine(EnableNavMeshAfterAnimation("Hitted"));
     }
