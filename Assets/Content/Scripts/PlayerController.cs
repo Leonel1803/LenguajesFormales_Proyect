@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     public GameObject rifle;
 
     public float playerSpeed = 0f;
-    private float health = 100f;
+    public float health = 100f;
 
     private bool hasPistol = false;
     private bool isPvP = false;
@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.tag == "TeletubbieHand")
         {
             Debug.Log("Entra al if");
-            TakeDamage(50);
+            TakeDamage(20);
         }
     }
 

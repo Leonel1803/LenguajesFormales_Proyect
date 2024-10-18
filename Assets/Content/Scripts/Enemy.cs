@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
@@ -20,6 +21,8 @@ public class Enemy : MonoBehaviour
     Animator enemyAnim;
     NavMeshAgent navMeshAgent;
     public Collider teletubbieHand;
+    public GameObject playerObject;
+    PlayerController playerController;
 
     void Start()
     {
@@ -27,11 +30,17 @@ public class Enemy : MonoBehaviour
         player = GameObject.Find("Player");
         target = GameObject.Find("Player").transform;
         navMeshAgent = GetComponent<NavMeshAgent>();
+        playerController = playerObject.GetComponent<PlayerController>();
     }
 
     void Update()
     {
-        if (navMeshAgent.enabled)
+        if (playerController.health <= 0)
+        {
+            navMeshAgent.enabled = false;
+            Dance();
+        }
+        else if (navMeshAgent.enabled)
         {
             navMeshAgent.speed = moveSpeed;
             navMeshAgent.SetDestination(target.position);
@@ -47,6 +56,11 @@ public class Enemy : MonoBehaviour
                 RunningAnimLogic();
             }
         }
+    }
+
+    private void Dance()
+    {
+        enemyAnim.SetBool("dance", true);
     }
 
     private void Awake()
